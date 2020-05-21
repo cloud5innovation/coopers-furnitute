@@ -16,20 +16,20 @@ const Cart = require('./../models/cart');
 exports.getUserById = async (req, res) => {
     try {
         const {firebase_id} = req.params;
-        const userData = await Users.userById(firebase_id);
-        if (!userData) {
+        const user = await Users.userById(firebase_id);
+        if (!user) {
             res.status(404).json(`That user could not be found`);
         } else {
-            const cartItem = await Cart.getCartItems(firebase_id)
+            const cart = await Cart.getCartItems(firebase_id)
             let updatedTotal = 0
-            const price = cartItem.forEach(element => {
+            const price = cart.forEach(element => {
                 return updatedTotal += element.price 
             });
             const total = Math.ceil(updatedTotal * 100) / 100
             console.log('total: $',total)
             // const userCart = await Cart.getCartById(firebase_id);
             // console.log(userCart, 'user cart')
-            res.status(200).json({userData, cartItem, total});
+            res.status(200).json({user, cart, total});
         }
     } catch(err) {
         res.status(500).json(`A user by that ID was not found`);
@@ -63,8 +63,8 @@ exports.addUser = async (req, res) => {
             res.status(400).json(`Please enter all input fields`);
         } else {
             const newUser = await Users.addUser(req.body);
-            const cart = await Cart.addCart(firebase_id);
-            console.log('cart', cart)
+            // const cart = await Cart.addCart(firebase_id);
+            // console.log('cart', cart)
             res.status(201).json({message: `Welcome ${first_name}`});
             console.log(newUser)
         // }

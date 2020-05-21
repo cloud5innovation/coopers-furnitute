@@ -23,6 +23,17 @@ module.exports = {
     },
   },
 
+  testing: {
+    client: 'pg',
+    connection: localPg, 
+    migrations: {
+      directory: './database/migrations'
+    },
+    seeds: {
+      directory: './database/seeds'
+    },
+  },
+  
   staging: {
     client: 'postgresql',
     connection: {
@@ -39,19 +50,19 @@ module.exports = {
     }
   },
 
-  production: {
-    client: 'postgresql',
-    connection: process.env.DATABASE_URL,
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      directory: './database/migrations'
-    },
-    seeds: {
-      directory: './database/seeds'
-    },
-  }
+  // production: {
+  //   client: 'postgresql',
+  //   connection: process.env.DATABASE_URL,
+  //   pool: {
+  //     min: 2,
+  //     max: 10
+  //   },
+  //   migrations: {
+  //     directory: './database/migrations'
+  //   },
+  //   seeds: {
+  //     directory: './database/seeds'
+  //   },
+  // }
 
 };

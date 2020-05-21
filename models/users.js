@@ -38,5 +38,4 @@ module.exports = {
     addUser,
     editUser,
     deleteUser,
-    registerOrLogin
-}
+};
