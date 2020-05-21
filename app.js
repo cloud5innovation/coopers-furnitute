@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const app = express();
+const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 
@@ -18,10 +19,10 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     next();
 });
-app.get('/', (req, res) => {
-    res.send('sanity check!')
-});
+
+app.use('/', productsRoutes);
 app.use('/user', usersRoutes);
+app.get('/sanity', (req, res) => {res.send('sanity check!')});
 app.use('/admin', adminRoutes);
 
 module.exports = app;

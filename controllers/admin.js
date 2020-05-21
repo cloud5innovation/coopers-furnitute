@@ -1,6 +1,7 @@
 const Products = require('../models/products');
 const Users = require('./../models/users');
 
+//TODO: ADD GET ADMIN BY ID
 exports.addAdmin = async (req, res) => {
     try{
         const {email, firebase_id, first_name, last_name, admin} = req.body;

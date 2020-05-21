@@ -81,9 +81,9 @@ exports.addToCart = async (req, res) => {
         //if cartItem[i].product_id === cartItem[i].product_id + 1
         //increase that cartItem's quantity by 1
         //else add to cart
-        const cart_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
-        const products_id = req.body.product_id;
-        const product = await Cart.addToCart(products_id, cart_id);
+        const firebase_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
+        const product_id = req.body.product_id;
+        const product = await Cart.addToCart(product_id, firebase_id);
         res.status(200).json(`Product has been added to your cart`)
     } catch (err) {
         res.status(500).json(`Error adding product to cart: ${err}`);
@@ -111,14 +111,9 @@ exports.getCart = async (req, res, next) => {
 
 exports.removeFromCart = async (req, res, next) => {
     try{
-        console.log(req.query, "query params")
-
-        const cart_id = req.params;
-        const product_id = req.query.prod;
-        // let productId = req.body.stalls_id;
-        // console.log(ree.log(req.body, 'deletedStall')
-        const removedProduct = await Cart.removeFromCart(product_id, cart_id)
-        res.status(201).json({message: `Your products has been added`})
+        const { id } = req.params;
+        const removedProduct = await Cart.removeFromCart(id)
+        res.status(201).json({message: `Your products has been deleted`})
         } catch (err) {
             res.status(500).json(`error removing product`)
             console.log(err, 'error from removing cart')
