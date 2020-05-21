@@ -20,9 +20,10 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.get('/sanity', (req, res) => {res.send('sanity check!')});
+
 app.use('/', productsRoutes);
 app.use('/user', usersRoutes);
-app.get('/sanity', (req, res) => {res.send('sanity check!')});
 app.use('/admin', adminRoutes);
 
 module.exports = app;
