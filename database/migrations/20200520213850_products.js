@@ -11,6 +11,7 @@ exports.up = function(knex, Promise) {
       product.integer('item_number');
       product.string('supplier');
       //WILL WE NEED VARIENTS (COLOR, DIMENSIONS)
+      //
     });
   };
   
