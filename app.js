@@ -11,6 +11,7 @@ const adminRoutes = require('./routes/admin');
 app.use(express.json());
 //TODO: SHOULD MORGAN LOGS BE UPLOADED TO HEORKU OR KEPT FOR DEVELOPMENT
 // app.use(morgan('combined', {stream: accessLogStream}));
+app.use(compression())
 
 app.use(helmet());
 app.use(cors());
@@ -20,7 +21,6 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     next();
 });
-app.use(compression)
 app.get('/sanity', (req, res) => {res.send('sanity check!')});
 app.use('/', productsRoutes);
 app.use('/user', usersRoutes);
