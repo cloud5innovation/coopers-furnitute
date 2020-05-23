@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
-import {useSelector} from "react-redux";
 import { withRouter, NavLink } from "react-router-dom";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+// import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
