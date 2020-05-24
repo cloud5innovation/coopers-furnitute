@@ -7,6 +7,7 @@ const app = express();
 const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
+const isAuthenticated = require("./middleware/auth");
 
 app.use(express.json());
 //TODO: SHOULD MORGAN LOGS BE UPLOADED TO HEORKU OR KEPT FOR DEVELOPMENT
@@ -23,7 +24,8 @@ app.use(function(req, res, next) {
 });
 app.get('/sanity', (req, res) => {res.send('sanity check!')});
 app.use('/', productsRoutes);
-app.use('/user', usersRoutes);
 app.use('/admin', adminRoutes);
+
+app.use('/user', usersRoutes);
 
 module.exports = app;

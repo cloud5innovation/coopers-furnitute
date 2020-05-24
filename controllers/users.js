@@ -29,7 +29,7 @@ exports.getUserById = async (req, res) => {
             console.log('total: $',total)
             // const userCart = await Cart.getCartById(firebase_id);
             // console.log(userCart, 'user cart')
-            res.status(200).json({user, cart, total});
+            res.status(200).json([user, cart, total]);
         }
     } catch(err) {
         res.status(500).json(`A user by that ID was not found`);

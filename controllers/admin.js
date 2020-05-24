@@ -1,14 +1,20 @@
 const Products = require('../models/products');
 const Users = require('./../models/users');
+const generateAdmin = require("./../middleware/auth");
 
-//TODO: ADD GET ADMIN BY ID
 exports.addAdmin = async (req, res) => {
     try{
-        const {email, firebase_id, first_name, last_name, admin} = req.body;
-        if (!email || !firebase_id || !first_name || !last_name || !admin) {
+        const admin = {
+            email: req.body.email,
+            firebase_id: req.body.firebase_id,
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            admin: true,
+        }
+        if (!admin.email || !admin.firebase_id || !admin.first_name || !admin.last_name) {
             res.status(400).json({message: 'Please enter all fields'})
         } else {
-            const newUser = await Users.addUser(req.body)
+            const newUser = await Users.addUser(admin)
             res.status(201).json({message: "Admin account has been created"});
         }
     } catch (err) {
@@ -88,7 +94,7 @@ exports.getUsers = async (req, res) => {
         res.status(200).json(UserData);
         }
     } catch (err) {
-        res.status(500).json(`No users found`);
+        res.status(500).json({message: "Error getting users: ", err});
 
     }
 };
