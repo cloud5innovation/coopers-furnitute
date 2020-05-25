@@ -17,6 +17,7 @@ exports.getUserById = async (req, res) => {
     try {
         const {firebase_id} = req.params;
         const user = await Users.userById(firebase_id);
+        console.log("user", user)
         if (!user) {
             res.status(404).json(`That user could not be found`);
         } else {
