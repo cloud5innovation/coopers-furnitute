@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
 const Users = require("./../models/users");
-const serviceAccount = process.env.FIREBASE_KEY
+// const serviceAccount = process.env.FIREBASE_KEY
 
 admin.initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
@@ -10,7 +10,7 @@ admin.initializeApp({
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_APP_ID,
-    credential: admin.credential.cert(serviceAccount),
+    // credential: admin.credential.cert(serviceAccount),
 }
  
 );
