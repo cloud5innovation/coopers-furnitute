@@ -32,36 +32,19 @@ exports.getProducts = async (req, res) => {
 // };
 
 exports.filterBy = async (req, res) => {
+    //products?col=catergory&filter=rings
     try {
         const {col, filter} = req.query
-        console.log(req.query, "query params")
-        const product = await Products.filterBy(col, filter)
-        res.status(200).json(product)
-        //products?col=catergory?&filter=rings
-        //req.query.filter
+        if (!col && !filter) {
+            res.status(404).json({message: "Enter a column and filter"})
+        } else {
+            const product = await Products.filterBy(col, filter)
+            res.status(200).json(product)
+        }        
     } catch (err) {
         res.status(500).json(err)
         console.log(err, "error from filter by")
     }
-// exports.editProduct = async (req, res, next) => {
-//     const {id}  = req.params;
-//     console.log(id, "id")
-//     const updatedProduct = req.body;
-//     try {
-//         // const productData = await Products.productById(id)
-//         // if(!productData) {
-//         //     //TODO: BETTER ERROR HANDLING NOT THROWING ERROR HERE
-//         //     res.status(404).json({message: "That product was not found"})
-//         // } else {
-//             const newProduct = await Products.editProduct(id, updatedProduct);
-//             res.status(200).json(`Your product was edited`)
-//         //}
-//     } catch (err) {
-//         if(err == "Undefined binding")
-//         res.status(500).json(err)
-//         console.log(err, 'error from edit');
-//     }
-// };
-}
+};
 
 

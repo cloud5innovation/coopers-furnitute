@@ -52,7 +52,7 @@ exports.addProducts = async (req, res) => {
 exports.editProduct = async (req, res, next) => {
     const {id}  = req.params;
     console.log(id, "id")
-    const updatedProduct = req.body;
+    const updatedProduct = req.body.updates;
     try {
         const product = await Products.productById(id)
         if(!product) {

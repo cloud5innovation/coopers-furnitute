@@ -52,27 +52,27 @@ const auth = (req, res, next) => {
 //   }) 
 // }
 
-async function grantAdminRole (uid) {
-  try {
-    const user = await admin.auth().getUser(uid);
-    console.log("Granting access")
-    if (user.customClaims && user.customClaims.admin === true) {
-      //This user is already and admin
-      return;
-    } else {
-      console.log("Admin granted")
+// async function grantAdminRole (uid) {
+//   try {
+//     const user = await admin.auth().getUser(uid);
+//     console.log("Granting access")
+//     if (user.customClaims && user.customClaims.admin === true) {
+//       //This user is already and admin
+//       return;
+//     } else {
+//       console.log("Admin granted")
   
-      admin.auth().setCustomUserClaims(user.uid, {
-        admin: true
-      })
-    }
-  } catch (err) {
-    console.log("Error from grant admin: ", err)
-  }
+//       admin.auth().setCustomUserClaims(user.uid, {
+//         admin: true
+//       })
+//     }
+//   } catch (err) {
+//     console.log("Error from grant admin: ", err)
+//   }
   
   
 
-};
+// };
 
 async function checkadmin (req, res, next) {
   try {
@@ -146,6 +146,5 @@ async function checkadmin (req, res, next) {
 
 module.exports = {
   auth,
-  grantAdminRole,
-  checkadmin
+checkadmin
 };

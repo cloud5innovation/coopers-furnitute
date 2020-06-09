@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/addadmin', adminRoutes.addAdmin);
 
 //POST => /admin/addproduct => ADD A PRODUCT
-router.post('/addproduct', authorize.auth, authorize.checkadmin, adminRoutes.addProducts);
+router.post('/addproduct',  adminRoutes.addProducts);
 //PUT => /admin/id => EDIT A PRODUCT
 router.put('/edit/:id', authorize.auth, authorize.checkadmin, adminRoutes.editProduct);
 //DELETE => /admin/deleteprod/id => DELETE A PRODUCT
