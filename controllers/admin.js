@@ -33,11 +33,12 @@ exports.addProducts = async (req, res) => {
             category: req.body.category,
             quantity: req.body.quantity,
             item_number: req.body.item_number,
+            item_name: req.body.item_name,
             supplier: req.body.supplier,
         }
         console.log(product);
        
-    if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.supplier) {
+    if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
         res.status(400).json({message: `Please enter all required fields`})
     } else {
         const productData = await Products.addProduct(product);
