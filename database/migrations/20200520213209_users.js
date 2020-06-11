@@ -12,6 +12,7 @@ exports.up = function(knex, Promise) {
         users.string('zip')
         users.string('phone')
         users.boolean('admin').defaultTo(false)
+        users.boolean('agent').defaultTo(false)
     })
   };
   
