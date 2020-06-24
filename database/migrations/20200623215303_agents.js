@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
         agent.string('agent_id').unsigned().notNullable().references('firebase_id').inTable('users').unique();
         agent.float('commision').defaultTo(0.00);
         agent.string('cash_app_name');
-
+  
     })
   };
   
