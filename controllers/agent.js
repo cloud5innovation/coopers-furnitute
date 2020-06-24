@@ -1,6 +1,5 @@
-const Products = require('../models/products');
 const Users = require('./../models/users');
-const generateAdmin = require("./../middleware/auth");
+const Agent = require('./../models/agent');
 
 exports.addAgent = async (req, res) => {
     try{
@@ -14,7 +13,8 @@ exports.addAgent = async (req, res) => {
         if (!agent.email || !agent.firebase_id || !agent.first_name || !agent.last_name) {
             res.status(400).json({message: 'Please enter all fields'})
         } else {
-            const newUser = await Users.addUser(agent)
+            const newUser = await Users.addUser(agent);
+            const newAgent = await Agent.addAgent(agent.firebase_id);
             res.status(201).json({message: "Agent account has been created"});
         }
     } catch (err) {

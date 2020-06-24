@@ -11,6 +11,7 @@ exports.up = function(knex, Promise) {
       product.string('item_number');
       product.string('item_name').notNullable().unique();
       product.string('supplier').notNullable();
+      product.boolean('out_of_stock').defaultTo(false);
       //WILL WE NEED VARIENTS (COLOR, DIMENSIONS)
       //
     });

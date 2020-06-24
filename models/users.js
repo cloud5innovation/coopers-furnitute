@@ -12,6 +12,7 @@ users = () => {
       'zip',
       'phone',
       'admin',
+      'agent',
       )
 };
 

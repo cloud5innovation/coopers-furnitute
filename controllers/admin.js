@@ -113,3 +113,31 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json(`error deleting user`);
     }
 };
+
+exports.addOrder = async (req, res, next) => {
+    try {
+        const {customer_email} = req.body
+      if (!customer_email) {
+        res.status(404).json({ message: "Please add the customers email to complete this order" });
+      } else {
+        const orders = req.body;
+        const OrdersToInsert = orders.map(order => ({
+          product_id: order.product_id,
+          customer_id: order.customer_id,
+          status: order.status,
+          order_total: order.order_total,
+          customer_email: order.customer_email,
+          agent_id: order.agent_id,
+        }));
+        console.log("OrdersToInsert: ", OrdersToInsert);
+  
+        const addedOrder = await Orders.addOrderByVendorId( OrdersToInsert);
+  
+        console.log("Added Order:", addedOrder);
+        res.status(201).json({message: "Your order has beend added"});
+      }
+    } catch (err) {
+      res.status(500).json(`Cannot add order: ${err}`);
+      console.log(err);
+    }
+  };
