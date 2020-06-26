@@ -64,7 +64,7 @@ exports.addUser = async (req, res) => {
             res.status(400).json(`Please enter all input fields`);
         } else {
             const newUser = await Users.addUser(req.body);
-            // const cart = await Cart.addCart(firebase_id);
+            const cart = await Cart.addCart(firebase_id);
             // console.log('cart', cart)
             res.status(201).json({message: `Welcome ${first_name}`});
             console.log(newUser)
@@ -75,6 +75,23 @@ exports.addUser = async (req, res) => {
     }
 };
 
+// exports.addToCart = async (req, res) => {
+//     try {
+//         //get all cart items for users cart
+//         //loop through all cart items
+//         //if cartItem[i].product_id === cartItem[i].product_id + 1
+//         //increase that cartItem's quantity by 1
+//         //else add to cart
+//         const firebase_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
+//         const product_id = req.body.product_id;
+//         const product = await Cart.addToCart(product_id, firebase_id);
+//         res.status(200).json(`Product has been added to your cart`)
+//     } catch (err) {
+//         res.status(500).json(`Error adding product to cart: ${err}`);
+//         console.log('error from add to cart', err)
+//     }
+// };
+
 exports.addToCart = async (req, res) => {
     try {
         //get all cart items for users cart
@@ -83,11 +100,19 @@ exports.addToCart = async (req, res) => {
         //increase that cartItem's quantity by 1
         //else add to cart
         const firebase_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
-        const product_id = req.body.product_id;
-        const product = await Cart.addToCart(product_id, firebase_id);
-        res.status(200).json(`Product has been added to your cart`)
+        const {product_id, quantity,  price} = req.body;
+        console.log("product id", product_id)
+        if(!product_id || !quantity || !firebase_id || !price) {
+            res.status(400).json({message: `Provide a product to add to cart`})
+        } else {
+            const newProduct = await Cart.addToCart(product_id, quantity, firebase_id, price);
+            // const newCart = await Cart.getCartItems(firebase_id)
+            res.status(201).json({message: `Product has been added to your cart`})
+            // res.status(201).json(newCart)
+
+        }
     } catch (err) {
-        res.status(500).json(`Error adding product to cart: ${err}`);
+        res.status(500).json({message: `Error adding product to cart`, err});
         console.log('error from add to cart', err)
     }
 };

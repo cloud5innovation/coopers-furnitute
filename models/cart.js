@@ -17,13 +17,25 @@ getCartItems = id => {
       .where({ "cart.firebase_id": id });
   };
 
-  addToCart = (product_id, firebase_id) => {
+  // addToCart = (product_id, firebase_id) => {
+  //   let addedItem = {
+  //     product_id,
+  //     firebase_id
+  //   };
+  
+  //   console.log("added item", addedItem);
+  //   return db("cart").insert(addedItem);
+  // };
+
+  addToCart = (product_id, quantity, firebase_id, price) => {
     let addedItem = {
       product_id,
-      firebase_id
+      quantity,
+      firebase_id,
+      price
     };
   
-    console.log("added item", addedItem);
+    console.log("added item", addedItem.price);
     return db("cart").insert(addedItem);
   };
 
@@ -36,8 +48,29 @@ getCartItems = id => {
     return db("cart").where({ id }).update(updates);
   };
 
+  async function addCart(firebaseId) {
+    try {
+      let addedCart = {
+        firebase_id: firebaseId
+      };
+      const [id] = await db("cart")
+        .insert(addedCart)
+        .returning("id");
+      return getCartById(id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  getCartById = id => {
+    return db("cart")
+      .where({ firebase_id: id })
+      .first();
+  };
+
   module.exports = {
       addToCart,
       getCartItems,
       removeFromCart,
+      addCart,
   };

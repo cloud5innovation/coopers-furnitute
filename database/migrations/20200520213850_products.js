@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('products', product => {
       product.increments();
-      product.string('title').notNullable();
+      product.string('title').notNullable().unique();
       product.string('description', 900).notNullable();
       product.float('price').notNullable();
       product.string('image_url', 250).notNullable();
@@ -12,8 +12,9 @@ exports.up = function(knex, Promise) {
       product.string('item_name').notNullable().unique();
       product.string('supplier').notNullable();
       product.boolean('out_of_stock').defaultTo(false);
+      product.string('back_in_stock')
       //WILL WE NEED VARIENTS (COLOR, DIMENSIONS)
-      //
+      // product.string('product_color').references('colors').inTable('name');
     });
   };
   
