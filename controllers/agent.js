@@ -15,6 +15,7 @@ exports.addAgent = async (req, res) => {
         } else {
             const newUser = await Users.addUser(agent);
             const newAgent = await Agent.addAgent(agent.firebase_id);
+            const cart = await Cart.addCart(admin.firebase_id);
             res.status(201).json({message: "Agent account has been created"});
         }
     } catch (err) {

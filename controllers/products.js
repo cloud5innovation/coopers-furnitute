@@ -16,20 +16,33 @@ exports.getProducts = async (req, res) => {
     }
 };
 
-// exports.getProductById = async (req, res) => {
-//     try {
-//         const {id} = req.params
-//         const productData = await Products.productById(id)
-//         if(!productData) {
-//             res.status(404).json(`That product cannot be found`)
-//         } else {
-//             res.status(200).json(productData);
-//         }
-//     } catch (err) {
-//         res.status(500).json(`That product cannot be found`);
-//         console.log(err, 'error from product by id')
-//     }
-// };
+exports.getProductById = async (req, res) => {
+    try {
+        const {id} = req.params
+        const productData = await Products.productById(id)
+        
+        console.log("product by id", productData)
+        if(!productData) {
+            res.status(404).json({message: `That product cannot be found`})
+        } else {
+            const title = productData.map(product => {
+                return  product.title}
+            )
+            console.log("title", title[0])
+            const dbColor = await Products.colorBy(title[0])
+            console.log("colors from db", dbColor)
+            const colors = dbColor.map((color) => {
+                return color.name
+            })
+            console.log("mapped colors", colors)
+            const product = productData
+            res.status(200).json([product, colors]);
+        }
+    } catch (err) {
+        res.status(500).json({message: `That product cannot be found, ${err.message}`});
+        console.log(err, 'error from product by id')
+    }
+};
 
 exports.filterBy = async (req, res) => {
     //products?col=catergory&filter=rings
@@ -39,7 +52,11 @@ exports.filterBy = async (req, res) => {
             res.status(404).json({message: "Enter a column and filter"})
         } else {
             const product = await Products.filterBy(col, filter)
-            res.status(200).json(product)
+            const colors = product.map(color => ({
+                colors: color.colors
+            }))
+            console.log("product", product)
+            res.status(200).json([product[0], colors])
         }        
     } catch (err) {
         res.status(500).json(err)

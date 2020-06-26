@@ -15,7 +15,7 @@ exports.up = function(knex, Promise) {
         order.string('customer_zip');
         order.string('customer_phone');
         order.string('agent_commision');
-        order.string('agentId').unsigned().references('agent_id').inTable('agents');
+        order.string('agent_id').unsigned().references('agent_id').inTable('agents');
         order.timestamp('created_at').defaultTo(knex.fn.now());
     })
   };

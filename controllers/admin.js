@@ -1,5 +1,6 @@
 const Products = require('../models/products');
 const Users = require('./../models/users');
+const Cart = require('./../models/cart');
 const generateAdmin = require("./../middleware/auth");
 
 exports.addAdmin = async (req, res) => {
@@ -14,7 +15,9 @@ exports.addAdmin = async (req, res) => {
         if (!admin.email || !admin.firebase_id || !admin.first_name || !admin.last_name) {
             res.status(400).json({message: 'Please enter all fields'})
         } else {
-            const newUser = await Users.addUser(admin)
+            const newUser = await Users.addUser(admin);
+            const cart = await Cart.addCart(admin.firebase_id);
+
             res.status(201).json({message: "Admin account has been created"});
         }
     } catch (err) {
@@ -35,13 +38,22 @@ exports.addProducts = async (req, res) => {
             item_number: req.body.item_number,
             item_name: req.body.item_name,
             supplier: req.body.supplier,
+            
         }
-        console.log(product);
-       
+        const colors = req.body.color
+        console.log("body colors", colors)
     if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
         res.status(400).json({message: `Please enter all required fields`})
     } else {
+        const addedColors = colors.map(color => ({
+            name: color,
+            product_title: product.title
+          }));
+          console.log("added colors", addedColors)
+
         const productData = await Products.addProduct(product);
+        const newColor = await Products.addColor(addedColors);
+
         res.status(201).json('Product added')
     }
 } catch (err) {
