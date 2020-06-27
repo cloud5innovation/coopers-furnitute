@@ -5,8 +5,8 @@ exports.up = function(knex, Promise) {
       reviews.string('title').notNullable();
       reviews.string('content', 900).notNullable();
       reviews.float('rating').notNullable();
-      reviews.integer('product_id').unsigned().notNullable().references('id').inTable('products');
-      reviews.string('firebase_id').unsigned().notNullable().references('firebase_id').inTable('users');
+      reviews.integer('product_id').unsigned().notNullable().references('id').inTable('products').onUpdate('CASCADE').onDelete('CASCADE');
+      reviews.string('firebase_id').unsigned().notNullable().references('firebase_id').inTable('users').onDelete('CASCADE');
     });
   };
   
