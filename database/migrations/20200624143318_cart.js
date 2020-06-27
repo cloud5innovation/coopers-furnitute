@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
         cart.integer('product_id').unsigned().notNullable().references('id').inTable('products').onUpdate('CASCADE').onDelete('CASCADE');
         cart.integer('quantity').defaultTo(0);
         cart.float('price').unsigned().notNullable();
-        // cart.string('color').references('name').inTable('colors');;
+        cart.string('color').references('name').inTable('colors');;
 
 
     })
