@@ -17,6 +17,8 @@ exports.up = function(knex, Promise) {
         order.string('agent_commision');
         order.string('agent_id').unsigned().references('agent_id').inTable('agents');
         order.timestamp('created_at').defaultTo(knex.fn.now());
+        order.string('notes');
+
     })
   };
   
