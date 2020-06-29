@@ -21,6 +21,10 @@ addProduct = (product) => {
 };
 
 addColor =(color) => {
+    // let newcolor ={
+    //     name: name, 
+    //     product_title: product_title
+    // }
     return db('colors').insert(color);
 };
 
@@ -49,6 +53,11 @@ colorBy = (product_title) => {
     // .innerJoin('colors', 'products.title', 'colors.product_title')
     .where({'colors.product_title': product_title})
 };
+
+getColors = () => {
+    return db('colors');
+};
+
 module.exports = {
     products,
     productById,
@@ -57,5 +66,6 @@ module.exports = {
     deleteProduct,
     filterBy,
     addColor,
-    colorBy
+    colorBy,
+    getColors,
 }

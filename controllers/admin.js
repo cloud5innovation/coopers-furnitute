@@ -45,9 +45,13 @@ exports.addProducts = async (req, res) => {
     if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
         res.status(400).json({message: `Please enter all required fields`})
     } else {
+        // const addedColors = colors.map(color => ({
+
+        //     return color: color
+        // }));
         const addedColors = colors.map(color => ({
-            name: color,
-            product_title: product.title
+           name: color,
+           product_title: product.title
           }));
           console.log("added colors", addedColors)
 
@@ -57,8 +61,14 @@ exports.addProducts = async (req, res) => {
         res.status(201).json('Product added')
     }
 } catch (err) {
-    res.status(500).json(`Product not added`);
-    console.log(err, 'error from product by id')
+    if (err.code === '23505') {
+        res.status(500).json({message: "That product already exists"});
+
+    } else {
+        res.status(500).json({message: "There was an error adding that product please try again"});
+
+    }
+    console.log(err, 'error from add product')
 }
 };
 

@@ -5,10 +5,15 @@ const Products = require('../models/products');
 exports.getProducts = async (req, res) => {
     try {
         const productData = await Products.products();
+        const dbcolors = await Products.getColors()
+        console.log("db colors", dbcolors)
+        const colors = dbcolors.map(item => {
+            return item.name
+        })
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
-            res.status(200).json(productData);
+            res.status(200).json({products: productData, colors: colors});
         }
     } catch (err) {
         res.status(500).json(`No products found`);
