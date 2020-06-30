@@ -5,15 +5,20 @@ const Products = require('../models/products');
 exports.getProducts = async (req, res) => {
     try {
         const productData = await Products.products();
-        const dbcolors = await Products.getColors()
+        const dbcolors = await Products.getColors();
+        const dbImages = await Products.getImages();
+
         console.log("db colors", dbcolors)
         const colors = dbcolors.map(item => {
             return item.name
-        })
+        });
+        const images = dbImages.map(item => {
+            return item.image_url
+        });
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
-            res.status(200).json({products: productData, colors: colors});
+            res.status(200).json({products: productData, colors: colors, images: images});
         }
     } catch (err) {
         res.status(500).json(`No products found`);
@@ -35,13 +40,18 @@ exports.getProductById = async (req, res) => {
             )
             console.log("title", title[0])
             const dbColor = await Products.colorBy(title[0])
+            const dbImages = await Products.imageBy(title[0])
+
             console.log("colors from db", dbColor)
             const colors = dbColor.map((color) => {
                 return color.name
             })
+            const images = dbImages.map((image) => {
+                return image.image_url
+            })
             console.log("mapped colors", colors)
             const product = productData
-            res.status(200).json([product, colors]);
+            res.status(200).json([product, colors, images]);
         }
     } catch (err) {
         res.status(500).json({message: `That product cannot be found, ${err.message}`});

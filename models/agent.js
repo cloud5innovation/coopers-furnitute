@@ -1,7 +1,7 @@
 const db = require("./../dbconfig");
 
-addAgent = (user) => {
-    return db('users').insert(user)
+addAgent = (agent) => {
+    return db('agents').insert(agent)
 };
 
 module.exports = {

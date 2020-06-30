@@ -12,11 +12,13 @@ exports.addAdmin = async (req, res) => {
             last_name: req.body.last_name,
             admin: true,
         }
+        console.log("admin", admin)
         if (!admin.email || !admin.firebase_id || !admin.first_name || !admin.last_name) {
             res.status(400).json({message: 'Please enter all fields'})
         } else {
             const newUser = await Users.addUser(admin);
             const cart = await Cart.addCart(admin.firebase_id);
+            console.log("admin", newUser)
 
             res.status(201).json({message: "Admin account has been created"});
         }
@@ -32,7 +34,7 @@ exports.addProducts = async (req, res) => {
             title: req.body.title,
             price: req.body.price,
             description: req.body.description,
-            image_url: req.body.image_url,
+            // image_url: req.body.image_url,
             category: req.body.category,
             quantity: req.body.quantity,
             item_number: req.body.item_number,
@@ -41,7 +43,10 @@ exports.addProducts = async (req, res) => {
             
         }
         const colors = req.body.color
+        const images = req.body.image_url
         console.log("body colors", colors)
+        console.log("body images", images)
+
     if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
         res.status(400).json({message: `Please enter all required fields`})
     } else {
@@ -53,10 +58,16 @@ exports.addProducts = async (req, res) => {
            name: color,
            product_title: product.title
           }));
+          const addedImages = colors.map(image => ({
+            image_url: image,
+            product_title: product.title
+           }));
           console.log("added colors", addedColors)
+          console.log("added images", addedImages)
 
         const productData = await Products.addProduct(product);
         const newColor = await Products.addColor(addedColors);
+        const newImage = await Products.addImage(addedImages);
 
         res.status(201).json('Product added')
     }

@@ -21,13 +21,12 @@ addProduct = (product) => {
 };
 
 addColor =(color) => {
-    // let newcolor ={
-    //     name: name, 
-    //     product_title: product_title
-    // }
     return db('colors').insert(color);
 };
 
+addImage =(image) => {
+    return db('images').insert(image);
+};
 editProduct = (id, product) => {
     return db('products').where({ id }).update(product)
 };
@@ -37,9 +36,7 @@ deleteProduct = (id) => {
 };
 
 filterBy = (col, filter) => {
-    // let items  = {
-    //     col, filter
-    // }
+  
     return db('products')
     .innerJoin('colors', 'products.title', 'colors.product_title')
     .select('products.id', 'products.title', 'products.price', 'products.description', 'products.image_url', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.name as colors', 'products.out_of_stock')
@@ -54,10 +51,20 @@ colorBy = (product_title) => {
     .where({'colors.product_title': product_title})
 };
 
+imageBy = (product_title) => {
+    console.log("title from backend", product_title)
+    return db('images')
+    // .innerJoin('colors', 'products.title', 'colors.product_title')
+    .where({'images.product_title': product_title})
+};
+
 getColors = () => {
     return db('colors');
 };
 
+getImages = () => {
+    return db('images');
+};
 module.exports = {
     products,
     productById,
@@ -68,4 +75,7 @@ module.exports = {
     addColor,
     colorBy,
     getColors,
+    addImage,
+    imageBy,
+    getImages
 }

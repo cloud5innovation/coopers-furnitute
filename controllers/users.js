@@ -21,12 +21,15 @@ exports.getUserById = async (req, res) => {
         if (!user) {
             res.status(404).json(`That user could not be found`);
         } else {
+            // const cartItem = await Cart.getCartItems(firebase_id)
+
             const cart = await Cart.getCartItems(firebase_id)
             let updatedTotal = 0
             const price = cart.forEach(element => {
                 return updatedTotal += element.price 
             });
             const total = Math.ceil(updatedTotal * 100) / 100
+            console.log("cart", cart)
             console.log('total: $',total)
             // const userCart = await Cart.getCartById(firebase_id);
             // console.log(userCart, 'user cart')
