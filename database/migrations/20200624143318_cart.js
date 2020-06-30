@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
       .notNullable()
       .references('firebase_id')
       .inTable('users')
-      // .unique();
+      .unique();
       // cart.float('total').unsigned().defaultTo(0.00);
       // cart.integer('quantity').defaultTo(0);
   })
