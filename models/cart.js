@@ -28,7 +28,7 @@ getCartById = id => {
 getCartItems = id => {
   return db('cart_item')
     .innerJoin('products', 'cart_item.product_id', 'products.id')
-    .innerJoin('colors', 'products.title', 'colors.name') 
+    .innerJoin('colors', 'cart_item.color_id', 'colors.id') 
     .innerJoin('cart', 'cart_item.cart_id', 'cart.firebase_id')
     .select([
       "cart_item.id",
@@ -36,7 +36,8 @@ getCartItems = id => {
         "products.title",
         "products.description",
         "products.price",
-        "products.image_url",
+        "colors.name",
+        // "products.image_url",
       // 'cart_item.id',
       // 'product_id',
       // 'product.title',

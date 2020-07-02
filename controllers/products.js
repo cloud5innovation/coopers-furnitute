@@ -15,6 +15,7 @@ exports.getProducts = async (req, res) => {
         const images = dbImages.map(item => {
             return item.image_url
         });
+        console.log("images", images)
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
@@ -68,6 +69,9 @@ exports.filterBy = async (req, res) => {
         } else {
             const product = await Products.filterBy(col, filter)
             const colors = product.map(color => ({
+                colors: color.colors
+            }))
+            const images = product.map(color => ({
                 colors: color.colors
             }))
             console.log("product", product)

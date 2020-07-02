@@ -39,15 +39,17 @@ exports.addProducts = async (req, res) => {
             quantity: req.body.quantity,
             item_number: req.body.item_number,
             item_name: req.body.item_name,
+            item_price: req.body.item_number,
             supplier: req.body.supplier,
             
         }
         const colors = req.body.color
         const images = req.body.image_url
         console.log("body colors", colors)
-        console.log("body images", images)
+        console.log("body images from add product", images)
+        console.log("added product", product)
 
-    if (!product.title || !product.price || !product.description || !product.image_url || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
+    if (!product.title || !product.price || !product.description  || !product.category || !product.quantity || !product.item_number || !product.item_name  || !product.supplier) {
         res.status(400).json({message: `Please enter all required fields`})
     } else {
         // const addedColors = colors.map(color => ({
@@ -58,7 +60,7 @@ exports.addProducts = async (req, res) => {
            name: color,
            product_title: product.title
           }));
-          const addedImages = colors.map(image => ({
+          const addedImages = images.map(image => ({
             image_url: image,
             product_title: product.title
            }));

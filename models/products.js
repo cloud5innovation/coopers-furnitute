@@ -2,7 +2,9 @@ const db = require('../dbconfig.js');
 
 products = () => {
     return db('products')
-    .select('id', 'title', 'price', 'description', 'image_url', 'category', 'quantity', 'item_number', 'supplier', 'out_of_stock', 'back_in_stock')
+    .innerJoin('colors', 'products.title', 'colors.product_title')
+    .innerJoin('images', 'products.title', 'images.product_title')
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'products.out_of_stock', 'products.back_in_stock', 'colors.name as colors', 'images.image_url as images')
 };
 
 productById = (id) => {
@@ -39,7 +41,8 @@ filterBy = (col, filter) => {
   
     return db('products')
     .innerJoin('colors', 'products.title', 'colors.product_title')
-    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.image_url', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.name as colors', 'products.out_of_stock')
+    .innerJoin('images', 'products.title', 'images.product_title')
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.name as colors', 'products.out_of_stock', 'images.image_url as images')
 
     .where(`products.${col}`, filter)
 };

@@ -21,7 +21,7 @@ exports.addAgent = async (req, res) => {
             cash_app_name: req.body.cash_app_name,
             agent_id: req.body.firebase_id,
         }
-        console.log("user", agent)
+        console.log("agent", agent)
 
         console.log("agent data", agentData)
         if (!agent.email || !agent.firebase_id || !agent.first_name || !agent.last_name || !agent.address || !agent.city || !agent.state || !agent.zip || !agent.phone || !agentData.cash_app_name) {
@@ -36,4 +36,35 @@ exports.addAgent = async (req, res) => {
         res.status(500).json({message: err});
         console.log("error from add agent: ", err)
     }
+};
+
+exports.getAgentById = async (req, res) => {
+    try {
+        const {firebase_id} = req.params;
+        const agent = await Agent.agentById(firebase_id);
+        console.log("agent", agent)
+        if (!agent) {
+            res.status(404).json({message: `That agent could not be found`});
+        } else {
+            res.status(200).json(agent);
+        }
+    } catch(err) {
+        res.status(500).json({message:`An agent by that ID was not found, ${err.message}`});
+        console.log('get agent by id error', err.message)
+    }
+};
+
+exports.editAgent = async (req, res) => {
+    try {
+        const updatedAgent = req.body;
+        const {id} = req.params;
+        const agent = await Agent.editAgent(updatedAgent, id);
+        if (!agent || !id) {
+            res.status(404).json({message: `Agent information was not updated`});
+        } else {
+            res.status(201).json(agent);
+        }
+      } catch (error) {
+        res.status(500).json({ message: `Error updating agent: ${error.message}` });     
+     }
 };
