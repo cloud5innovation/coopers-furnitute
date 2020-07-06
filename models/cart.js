@@ -29,6 +29,9 @@ getCartItems = id => {
   return db('cart_item')
     .innerJoin('products', 'cart_item.product_id', 'products.id')
     .innerJoin('colors', 'cart_item.color_id', 'colors.id') 
+    .innerJoin('images', 'cart_item.image_id', 'images.id') 
+    // .innerJoin('images', 'products.title', 'images.product_title')
+
     .innerJoin('cart', 'cart_item.cart_id', 'cart.firebase_id')
     .select([
       "cart_item.id",
@@ -36,7 +39,8 @@ getCartItems = id => {
         "products.title",
         "products.description",
         "products.price",
-        "colors.name",
+        "colors.name as colors",
+        "images.image_url"
         // "products.image_url",
       // 'cart_item.id',
       // 'product_id',
@@ -63,12 +67,13 @@ getCartItems = id => {
   //   return db("cart").insert(addedItem);
   // };
 
-  addToCart = (product_id, quantity, firebase_id, price) => {
+  addToCart = (product_id,  cart_id, price, color_id, image_id) => {
     let addedItem = {
       product_id,
-      quantity,
-      firebase_id,
-      price
+      cart_id,
+      price,
+      color_id,
+      image_id,
     };
   
     console.log("added item", addedItem.price);

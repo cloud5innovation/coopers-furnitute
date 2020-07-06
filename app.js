@@ -8,6 +8,7 @@ const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 const agentRoutes = require('./routes/agent');
+const orderRoutes = require('./routes/order');
 
 app.use(express.json());
 //TODO: SHOULD MORGAN LOGS BE UPLOADED TO HEORKU OR KEPT FOR DEVELOPMENT
@@ -27,5 +28,7 @@ app.use('/', productsRoutes);
 app.use('/admin', adminRoutes);
 app.use('/agent', agentRoutes);
 app.use('/user', usersRoutes);
+app.use('/order', orderRoutes);
+
 
 module.exports = app;

@@ -42,7 +42,7 @@ filterBy = (col, filter) => {
     return db('products')
     .innerJoin('colors', 'products.title', 'colors.product_title')
     .innerJoin('images', 'products.title', 'images.product_title')
-    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.name as colors', 'products.out_of_stock', 'images.image_url as images')
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.id as color_id',  'colors.name as colors', 'products.out_of_stock', 'images.id as image_id', 'images.image_url as images')
 
     .where(`products.${col}`, filter)
 };

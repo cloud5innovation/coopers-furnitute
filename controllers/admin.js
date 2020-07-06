@@ -145,7 +145,7 @@ exports.deleteUser = async (req, res) => {
             res.status(200).json(`User has been deleted`);
         }
     } catch(err) {
-        res.status(500).json(`error deleting user`);
+        res.status(500).json({message: `error deleting user`, err});
     }
 };
 
@@ -176,3 +176,17 @@ exports.addOrder = async (req, res, next) => {
       console.log(err);
     }
   };
+
+  exports.getAgents = async (req, res) => {
+    try {
+        const UserData = await Users.getAgents();
+        if (UserData.length === 0) {
+            res.status(404).json({message: "No agents found"})
+        } else {
+        res.status(200).json(UserData);
+        }
+    } catch (err) {
+        res.status(500).json({message: "Error getting agents: ", err});
+
+    }
+};

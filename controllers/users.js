@@ -103,12 +103,14 @@ exports.addToCart = async (req, res) => {
         //increase that cartItem's quantity by 1
         //else add to cart
         const firebase_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
-        const {product_id, quantity,  price} = req.body;
-        console.log("product id", product_id)
-        if(!product_id || !quantity || !firebase_id || !price) {
+        const {product_id,  price, color, image} = req.body;
+        console.log("price", price)
+        console.log("price", color)
+
+        if(!product_id || !firebase_id || !price) {
             res.status(400).json({message: `Provide a product to add to cart`})
         } else {
-            const newProduct = await Cart.addToCart(product_id, quantity, firebase_id, price);
+            const newProduct = await Cart.addToCart(product_id, firebase_id, price, color, image);
             // const newCart = await Cart.getCartItems(firebase_id)
             res.status(201).json({message: `Product has been added to your cart`})
             // res.status(201).json(newCart)

@@ -64,6 +64,9 @@ exports.filterBy = async (req, res) => {
     //products?col=catergory&filter=rings
     try {
         const {col, filter} = req.query
+        console.log("col", col)
+        console.log("filter", filter)
+
         if (!col && !filter) {
             res.status(404).json({message: "Enter a column and filter"})
         } else {

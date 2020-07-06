@@ -2,6 +2,32 @@ const Users = require('./../models/users');
 const Agent = require('./../models/agent');
 const Cart = require('./../models/cart');
 
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
+const welcomeEmail = (to, from) => {
+    console.log("to", to)
+    console.log("from", from)
+
+    const msg = {
+        to: 'latifah.pres@gmail.com',
+        from: 'tifah4@hotmail.com',
+        subject: 'Sending with Twilio SendGrid is Fun',
+        text: 'Thank you for registering',
+        html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+      };
+      sgMail.send(msg);
+    // const msg = {
+    //     to: 'latifah.pres@gmail.com',
+    //     from: 'tifah4@hotmail.com',
+    //     subject: 'Sending with Twilio SendGrid is Fun',
+    //     text: 'and easy to do anywhere, even with Node.js',
+    //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    //   };
+    //   sgMail.send(msg);
+};
+
 exports.addAgent = async (req, res) => {
     try{
         const agent = {
@@ -27,13 +53,36 @@ exports.addAgent = async (req, res) => {
         if (!agent.email || !agent.firebase_id || !agent.first_name || !agent.last_name || !agent.address || !agent.city || !agent.state || !agent.zip || !agent.phone || !agentData.cash_app_name) {
             res.status(400).json({message: 'Please enter all fields'})
         } else {
-            const newUser = await Users.addUser(agent);
-            const newAgent = await Agent.addAgent(agentData);
-            const cart = await Cart.addCart(agent.firebase_id);
-            res.status(201).json({message: "Agent account has been created"});
+            const msg = {
+                to: `${agent.email}`,
+                from: 'latifah.pres@gmail.com',
+                subject: 'Thank you for signing up to be a Coopers Home Furniture sales agent.',
+                text: 'Thank you for signing up to be a Coopers Home Furniture sales agent.',
+                html: '<p>We’re excited to see you get started on making sales!!! Please don’t forget  to download Group Me https://apps.apple.com/us/app/groupme/id392796698The and the email that you used to register will be used to add you to our chat where you will get access to our team and be allowed to ask any questions you may have. Please carefully read through the material in your information portal located in your agent dash board. The getting started document will explain in detail how our processes work. Thanks again for signing up and welcome to our sales force.</p>',
+              };
+              sgMail.send(msg).then(() => {
+                console.log('Message sent')
+            }).catch((error) => {
+                console.log(error.response.body)
+                // console.log(error.response.body.errors[0].message)
+            })
+              console.log("msg", msg)
+              const newUser = await Users.addUser(agent);
+              const newAgent = await Agent.addAgent(agentData);
+              const cart = await Cart.addCart(agent.firebase_id);
+              res.status(201).json({message: "Agent account has been created"});
         }
+
+         
+        
+           
     } catch (err) {
-        res.status(500).json({message: err});
+        if (err.code === "23505") {
+            res.status(500).json({message: "User account already exists"});
+
+        } else {
+            res.status(500).json({message: err})
+        }
         console.log("error from add agent: ", err)
     }
 };

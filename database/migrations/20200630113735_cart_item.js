@@ -7,6 +7,7 @@ exports.up = function(knex, Promise) {
         cart.integer('quantity').defaultTo(0);
         cart.float('price').unsigned().notNullable();
         cart.integer('color_id').references('id').inTable('colors');;
+        cart.integer('image_id').references('id').inTable('images');;
 
 
     })

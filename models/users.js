@@ -33,10 +33,16 @@ userById = (firebase_id) => {
     return db("users").where({ 'firebase_id': firebase_id }).first();
 };
 
+getAgents = () => {
+    return db("users")
+    .innerJoin("agents", "users.firebase_id", "agents.agent_id")
+    .where({ 'agent': true });
+};
 module.exports = {
     users,
     userById,
     addUser,
     editUser,
     deleteUser,
+    getAgents,
 };
