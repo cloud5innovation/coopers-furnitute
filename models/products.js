@@ -4,7 +4,8 @@ products = () => {
     return db('products')
     .innerJoin('colors', 'products.title', 'colors.product_title')
     .innerJoin('images', 'products.title', 'images.product_title')
-    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'products.out_of_stock', 'products.back_in_stock', 'colors.name as colors', 'images.image_url as images')
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 
+    'products.out_of_stock', 'products.back_in_stock', 'colors.id as color_id', 'colors.name as colors', 'images.id as image_id', 'images.image_url as images')
 };
 
 productById = (id) => {
@@ -17,6 +18,15 @@ productById = (id) => {
     .where({'products.id': id})
 
 };
+
+getByCategory = (cat) => {
+    return db('products')
+    .innerJoin('colors', 'products.title', 'colors.product_title')
+    .innerJoin('images', 'products.title', 'images.product_title')
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'products.out_of_stock', 'products.back_in_stock', 'colors.name as colors', 'images.image_url as images')
+
+    .where({'products.category': cat})
+}
 
 addProduct = (product) => {
     return db('products').insert(product)
@@ -80,5 +90,6 @@ module.exports = {
     getColors,
     addImage,
     imageBy,
-    getImages
+    getImages,
+    getByCategory
 }

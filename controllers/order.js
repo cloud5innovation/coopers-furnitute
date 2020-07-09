@@ -1,8 +1,8 @@
 const Orders = require("../models/orders.js");
 const Products = require("../models/products");
 
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// const sgMail = require('@sendgrid/mail');
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -39,7 +39,7 @@ exports.filterOrderBy = async (req, res) => {
 
 exports.getOrderById = async (req, res, next) => {
   try {
-    const id = req.params.order_id;
+    const id = req.params.id;
     console.log(id);
     const order = await Orders.getOrderById(id);
     // console.log(stall)
@@ -69,108 +69,108 @@ exports.getOrdersByAgentId = async (req, res, next) => {
 
 exports.addOrder = async (req, res, next) => {
   try {
-    const {customer_email} = req.body
-    const order = req.body.order;
-    console.log("order", order)
+    console.log("product_id", req.body.product_id)
+    const order = 
+    {
+      customer_first_name: req.body.customer_first_name, 
+      customer_last_name: req.body.customer_last_name, 
+      email: req.body.email, 
+      customer_address: req.body.customer_address, 
+      customer_city: req.body.customer_city, 
+      customer_state: req.body.customer_state, 
+      customer_zip: req.body.customer_zip, 
+      customer_phone: req.body.customer_phone, 
+      agent_id: req.body.agent_id, 
+      order_total: req.body.order_total, 
+      notes: req.body.notes,
+      product_id: req.body.product_id,
+      status: req.body.status
+    } 
+    // const order = req.body.order;
    const total = req.body.total
+   const order_items = req.body.order_items
     if (!order) {
       res.status(404).json({ message: "Error processing your order"  });
     } else {
-      const OrdersToInsert = order.map(order => (
+      const addedOrder = await Orders.addOrder(order);
+      console.log("addedOrder", addedOrder)
+      const addedOrderItems =  order_items.map(item => ({
+        order_id: addedOrder[0],
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: item.price,
+        color_id: item.color_id,
+        image_id: item.image_id,
+      }))
+      const newOrder = {order, addedOrderItems}
+      const addItem = await Orders.addToOrderItems(addedOrderItems)
+console.log("can i loop foe email", addedOrderItems.order_id)
+      // const OrdersToInsert = order.map(order => (
       
-        {
+      //   {
         
-        product_id: order.product_id,
-        status: order.status,
-        customer_email: order.customer_email,
-        customer_first_name: order.customer_first_name,
-        customer_last_name: order.customer_last_name,
-        customer_address: order.customer_address,
-        customer_city: order.customer_city,
-        customer_state: order.customer_state,
-        customer_zip: order.customer_city,
-        customer_phone: order.customer_phone,
-        agent_commision: order.agent_commision,
-        agent_id: order.agent_id,
-        notes: order.notes
-      }
+      //   product_id: order.product_id,
+      //   status: order.status,
+      //   customer_email: order.customer_email,
+      //   customer_first_name: order.customer_first_name,
+      //   customer_last_name: order.customer_last_name,
+      //   customer_address: order.customer_address,
+      //   customer_city: order.customer_city,
+      //   customer_state: order.customer_state,
+      //   customer_zip: order.customer_city,
+      //   customer_phone: order.customer_phone,
+      //   agent_commision: order.agent_commision,
+      //   agent_id: order.agent_id,
+      //   notes: order.notes
+      // }
       
-      ));
+      // ));
 
-      const product = await Products.filterBy('id', OrdersToInsert[0].product_id)
-console.log("product", product)
+
+      
       //INSERT AGENT COMMISION INTO AGENT PAGE
-      console.log("OrdersToInsert: ", OrdersToInsert)
-      const newOrder = {OrdersToInsert, order_total: total }
-      const customer_email = OrdersToInsert.forEach(function(message, index) {
-        let data = []
-       
-        let newstuff = Object.keys(message).forEach(function(prop) { 
-              console.log(message[prop]);
-const concatData = data.push(message[prop]) 
-console.log("concat data", concatData)
-          return   concatData
-        })
-console.log("data",data)
-console.log("new stuff", newstuff)
+   
 
-        return data
-    });
-      const addedOrder = await Orders.addOrder(OrdersToInsert, total);
+      // const custOrder = await Orders.getOrdersByCustomer(order.email);
+
+      // console.log("customer order", custOrder)
+    //   const msg = {
+    //     to: "latifahpresident@gmail.com",
+    //     from: 'latifah.pres@gmail.com',
+    //     subject: 'Order conformation',
+    //     text: `We recieved a new order from ${customer_email}, they ordered ${OrdersToInsert[0].product_id}. Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
+    //       The customer can be contacted at ${OrdersToInsert[0].customer_phone},
+    //     `,
+    //     html: `
+    //     <p>
+    //     Order conformation. This is a conformation that your order has been processed.
+    //       You will receive a delivery time with in the next 24 hours. Thanks for being a valued customer. Please see order below. If any part of this order is incorrect please reach out to us at booking@coopershomefurniture.com
+        
+    //     </p>
+    //     {{#each product}}
      
-      console.log("customer email bottom", OrdersToInsert[0].customer_email)
-      // console.log("a new order has been made they ordered", 
-      
-      //   customer_email[0], customer_email[1], customer_email[2], customer_email[3], customer_email[4],
-      //   customer_email[5], customer_email[6], customer_email[7], customer_email[8], customer_email[9],
-      //   customer_email[10], customer_email[11], customer_email[12],
-      // )
-      const msg = {
-        to: "dailancooper@gmail.com",
-        from: 'latifah.pres@gmail.com',
-        subject: 'Order conformation',
-        text: `We recieved a new order from ${OrdersToInsert[0].customer_email}, they ordered ${OrdersToInsert[0].product_id}. Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
-          The customer can be contacted at ${OrdersToInsert[0].customer_phone},
-        `,
-        html: 
-        `
-        <div>
+    //       <p>{{this.title}}</p>
        
-        <div>
-          This is a conformation that your order has been processed.
-          You will receive a delivery time with in the next 24 hours. 
-        Thanks for being a valued customer. Please see order below. 
-        If any part of this order is incorrect please reach out to us at booking@coopershomefurniture.com
-        <img src="${product[0].images}" alt="${product[0].title}"/> 
-          <h4>${product[0].title}</h4>
-          <h4>${product[0].price}</h4>
-          <h4>${product[0].colors}</h4>
-        </div>
-        <div>
-          <h2>Shipping Details</h2>
-          <h4>Email ${OrdersToInsert[0].customer_email}</h4>
-          <h4>Street address${OrdersToInsert[0].customer_address}</h4>
-          <h4>City ${OrdersToInsert[0].customer_city}</h4>
-          <h4>State ${OrdersToInsert[0].customer_state}</h4>
-          <h4>Zip ${OrdersToInsert[0].customer_state}</h4>
-          <h4>Phone ${OrdersToInsert[0].customer_phone}</h4>
-        </div>
-        </div>`
-        // html: `<strong> We recieved a new order from ${OrdersToInsert[0].customer_email}, they ordered ${product[0].title}, price: ${product[0].price}, color: ${product[0].colors}. The item number is ${product[0].item_number} .
-        // <img src="${product[0].images}" alt="${product[0].title}"/> Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
-        // The customer can be contacted at ${OrdersToInsert[0].customer_phone},</strong>`,
-      };
-      sgMail.send(msg).then(() => {
-        console.log('Message sent', msg)
-    }).catch((error) => {
-        console.log(error.response.body)
-        // console.log(error.response.body.errors[0].message)
-    })
-      console.log("Added Order:", newOrder);
-      res.status(200).json(addedOrder);
+      
+    //   {{/each}}
+        
+        
+    //     `
+       
+    //     // html: `<strong> We recieved a new order from ${OrdersToInsert[0].customer_email}, they ordered ${product[0].title}, price: ${product[0].price}, color: ${product[0].colors}. The item number is ${product[0].item_number} .
+    //     // <img src="${product[0].images}" alt="${product[0].title}"/> Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
+    //     // The customer can be contacted at ${OrdersToInsert[0].customer_phone},</strong>`,
+    //   };
+    //   sgMail.send(msg).then(() => {
+    //     console.log('Message sent', msg)
+    // }).catch((error) => {
+    //     console.log(error.response.body)
+    //     // console.log(error.response.body.errors[0].message)
+    // })
+      res.status(200).json({message: `Order Created`});
     }
   } catch (err) {
-    res.status(500).json(`Cannot add order: ${err}`);
+    res.status(500).json(`Cannot add order: ${err.message}`);
     console.log(err);
   }
 };

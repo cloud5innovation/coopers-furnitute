@@ -1,10 +1,17 @@
 const db = require("./../dbconfig");
+const { where } = require("./../dbconfig");
 
  addOrder = (addedOrder, order_total) => {
      let newOrder = {
          addedOrder,
      }
-  return db("order").insert(addedOrder, order_total);
+  return db("order").insert(addedOrder, order_total)
+  .returning('id')
+.into('order')
+
+// .then(function (id) {
+//     return db("order_items").insert(items)
+//   });
 
 };
 
@@ -15,13 +22,54 @@ filterOrdersBy = (col, filter) => {
 getOrders = () => {
     return db("order")
     .innerJoin("products", "order.product_id", "products.id")
-    .select("order.id", "order.order_total", "order.customer_email", "order.customer_email", "order.customer_address", "order.customer_city", "order.customer_state", "order.customer_zip", "order.customer_phone", "order.agent_id", "order.agent_commision", "products.title", "products.price", "products.item_number", "products.item_name" )
+    .select("order.id", "order.order_total", "order.email", "order.customer_first_name", "order.customer_last_name", "order.customer_address", "order.customer_city", "order.customer_state", "order.customer_zip", "order.customer_phone", "order.agent_id", "order.agent_commision", "products.title", "products.price", "products.item_number", "products.item_name" )
 };
 
 getOrdersByAgentId = (agent_id) => {
     return db("order").where({"agent_id": agent_id})
 };
 
+getOrdersByCustomer = (customer_email) => {
+    return db("order")
+    .innerJoin("products", "order.product_id", "products.id")
+    .select("order.id", "order.order_total", "order.customer_email", "order.customer_email", "order.customer_address", "order.customer_city", "order.customer_state", "order.customer_zip", "order.customer_phone", "order.agent_id", "order.agent_commision", "products.title", "products.price", "products.item_number", "products.item_name" )
+    .where({"customer_email": customer_email})
+};
+
+getOrderItems = (customer_email) => {
+    return db('order_items')
+    .innerJoin('products', 'order_items.product_id', 'products.id')
+    .innerJoin('colors', 'order_items.color_id', 'colors.id') 
+    .innerJoin('images', 'order_items.image_id', 'images.id') 
+    .innerJoin('order', 'order_items.customer_email', 'order.email')
+    .select(
+        [
+            "order.id",
+            "order.status",
+            "order.customer_first_name",
+            "order.customer_last_name",
+            "order.email",
+            "order.customer_address",
+            "order.customer_city",
+            "order.customer_state",
+            "order.customer_zip",
+            "order.customer_phone",
+            "order.agent_id",
+            "order.notes",
+            "order.created_at",
+
+            "product_id",
+            "products.title",
+            "products.description",
+            "products.price",
+            "colors.name as colors",
+            "images.image_url",
+            "order_items.quantity"
+        ]
+    )
+    .where({'order_items.customer_email': customer_email})
+
+};
 
 async function deleteOrder (id) {
     try{
@@ -42,11 +90,57 @@ async function updateOrder(order, id) {
     }
 }
 
+addToOrderItems = (items) => {
+    
+  
+    console.log("added item", items);
+    return db("order_items").insert(items);
+  };
+
+  getOrderById = (id) => {
+    console.log("id from model", id)
+    return db('order')
+    .innerJoin('order_items', 'order.id', 'order_items.order_id')
+    .innerJoin('products', 'order_items.product_id', 'products.id')
+    .innerJoin('colors', 'order_items.color_id', 'colors.id')
+    .innerJoin('images', 'order_items.image_id', 'images.id')
+    .select(
+        [
+            "order.id",
+            "order.status",
+            "order.customer_first_name",
+            "order.customer_last_name",
+            "order.email",
+            "order.customer_address",
+            "order.customer_city",
+            "order.customer_state",
+            "order.customer_zip",
+            "order.customer_phone",
+            "order.agent_id",
+            "order.notes",
+            "order.created_at",
+
+            "order_items.product_id",
+            "products.title",
+            "products.description",
+            "products.price",
+            "colors.name as colors",
+            "images.image_url",
+            "order_items.quantity"
+        ]
+    )
+    .where({'order.id': id})
+
+};
 module.exports = {
     addOrder,
     getOrders,
     filterOrdersBy,
     getOrdersByAgentId,
     deleteOrder,
-    updateOrder
+    updateOrder,
+    getOrdersByCustomer,
+    addToOrderItems,
+    getOrderItems,
+    getOrderById
 }

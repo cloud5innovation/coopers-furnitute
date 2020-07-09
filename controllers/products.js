@@ -74,11 +74,11 @@ exports.filterBy = async (req, res) => {
             const colors = product.map(color => ({
                 colors: color.colors
             }))
-            const images = product.map(color => ({
-                colors: color.colors
+            const images = product.map(image => ({
+                images: image.image_url
             }))
-            console.log("product", product)
-            res.status(200).json([product[0], colors])
+            console.log("product!!", product)
+            res.status(200).json([product, colors, images])
         }        
     } catch (err) {
         res.status(500).json(err)
@@ -86,4 +86,25 @@ exports.filterBy = async (req, res) => {
     }
 };
 
+exports.getByCat = async (req, res) => {
+    const {cat} = req.params
+        try {
+            const productData = await Products.getByCategory(cat);
+            // const dbcolors = await Products.getColors();
+            // const dbImages = await Products.getImages();
+    
+            // const colors = dbcolors.map(item => {
+            //     return item.name
+            // });
+          
+            if (productData.length == 0) {
+                res.status(404).json({message: `You haven't added any products yet.`})
+            } else {
+                res.status(200).json({products: productData});
+            }
+        } catch (err) {
+            res.status(500).json(`No products found`);
+            console.log(err)
+        }
 
+}

@@ -40,20 +40,9 @@ getCartItems = id => {
         "products.description",
         "products.price",
         "colors.name as colors",
-        "images.image_url"
-        // "products.image_url",
-      // 'cart_item.id',
-      // 'product_id',
-      // 'product.title',
-      // 'product.description',
-      // 'product.price',
-      // 'product.image_url',
-      // 'product.category',
-      // 'product.vendor_id',
-      // 'cart.firebase_id',
-      // 'cart.firebase_id',
-      // 'vendor.stripe_id',
-      // 'cart_item.quantity',
+        "images.image_url",
+        "images.id",
+        "colors.id"
     ])
     .where({ cart_id: id });
 };
@@ -67,13 +56,14 @@ getCartItems = id => {
   //   return db("cart").insert(addedItem);
   // };
 
-  addToCart = (product_id,  cart_id, price, color_id, image_id) => {
+  addToCart = (product_id,  cart_id, price,  color_id, image_id, quantity,) => {
     let addedItem = {
       product_id,
       cart_id,
       price,
       color_id,
       image_id,
+      // quantity,
     };
   
     console.log("added item", addedItem.price);

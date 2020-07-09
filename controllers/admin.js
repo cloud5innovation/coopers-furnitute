@@ -117,7 +117,7 @@ exports.deleteProduct = async (req, res, next) => {
             res.status(404).json({message: `There was an error, product not deleted`})
         }
     } catch (err) {
-        res.status(500).json(`That product does not exist`)
+        res.status(500).json(`That product does not exist, ${err}`)
     }
 };
 
