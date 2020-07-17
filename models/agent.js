@@ -5,7 +5,7 @@ addAgent = (agent) => {
 };
 
 agentById = (firebase_id) => {
-    return db('agents').select('cash_app_name', 'commision').where({ 'agent_id': firebase_id }).first();
+    return db('agents').select('cash_app_name', 'commision', 'agent_id').where({ 'agent_id': firebase_id }).first();
 };
 
 deleteAgent = (id) => {

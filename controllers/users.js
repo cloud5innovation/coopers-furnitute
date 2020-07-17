@@ -105,7 +105,7 @@ exports.addToCart = async (req, res) => {
         const firebase_id = req.params.id; //CART_ID IS THE USER'S FIREBASE_ID
         const {product_id,  price, quantity, color, image} = req.body;
         console.log("price", price)
-        console.log("color", color)
+        console.log("req.body ADD TO CART", req.body)
 
         if(!product_id || !firebase_id || !price) {
             res.status(400).json({message: `Provide a product to add to cart`})
@@ -126,14 +126,13 @@ exports.getCart = async (req, res, next) => {
     try {
         const id = req.params.id
         const cartItem = await Cart.getCartItems(id)
+        console.log("cartItem", cartItem)
         let updatedTotal = 0
         const price = cartItem.forEach(element => {
             return updatedTotal += element.price 
         });
         const total = Math.ceil(updatedTotal * 100) / 100
-        console.log('total: $',total)
         res.status(200).json({cartItem, total})
-        console.log(cartItem, 'cart type')
     } catch (err) {
         res.status(500).json(err)
         console.log(err, 'error from get cart')

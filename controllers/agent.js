@@ -12,7 +12,7 @@ const welcomeEmail = (to, from) => {
 
     const msg = {
         to: 'latifah.pres@gmail.com',
-        from: 'tifah4@hotmail.com',
+        from: 'admin@coopershomefurniture.com',
         subject: 'Sending with Twilio SendGrid is Fun',
         text: 'Thank you for registering',
         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
@@ -55,7 +55,8 @@ exports.addAgent = async (req, res) => {
         } else {
             const msg = {
                 to: `${agent.email}`,
-                from: 'latifah.pres@gmail.com',
+                bcc: 'admin@coopershomefurniture.com',
+                from: 'admin@coopershomefurniture.com',
                 subject: 'Thank you for signing up to be a Coopers Home Furniture sales agent.',
                 text: 'Thank you for signing up to be a Coopers Home Furniture sales agent.',
                 html: '<p>We’re excited to see you get started on making sales!!! Please don’t forget  to download Group Me https://apps.apple.com/us/app/groupme/id392796698The and the email that you used to register will be used to add you to our chat where you will get access to our team and be allowed to ask any questions you may have. Please carefully read through the material in your information portal located in your agent dash board. The getting started document will explain in detail how our processes work. Thanks again for signing up and welcome to our sales force.</p>',

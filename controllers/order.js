@@ -1,8 +1,8 @@
 const Orders = require("../models/orders.js");
 const Products = require("../models/products");
 
-// const sgMail = require('@sendgrid/mail');
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -42,7 +42,7 @@ exports.getOrderById = async (req, res, next) => {
     const id = req.params.id;
     console.log(id);
     const order = await Orders.getOrderById(id);
-    // console.log(stall)
+    console.log("get order by id", order)
     res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ message: `error getting order` });
@@ -52,12 +52,12 @@ exports.getOrderById = async (req, res, next) => {
 
 exports.getOrdersByAgentId = async (req, res, next) => {
   try {
-    const agent_id = req.params.id;
+    const agent_id = req.params.agent_id;
     console.log("agent id,", agent_id);
     if (!agent_id) {
       res.status(404).json({ message: "That agent could not be found" });
     } else {
-      const orders = await Orders.getOdersByAgentId(agent_id);
+      const orders = await Orders.getOrdersByAgentId(agent_id);
       console.log("Order Data:", orders);
       res.status(200).json(orders);
     }
@@ -69,31 +69,31 @@ exports.getOrdersByAgentId = async (req, res, next) => {
 
 exports.addOrder = async (req, res, next) => {
   try {
-    console.log("product_id", req.body.product_id)
+    console.log("req.body", req.body.orderObj)
     const order = 
     {
-      customer_first_name: req.body.customer_first_name, 
-      customer_last_name: req.body.customer_last_name, 
-      email: req.body.email, 
-      customer_address: req.body.customer_address, 
-      customer_city: req.body.customer_city, 
-      customer_state: req.body.customer_state, 
-      customer_zip: req.body.customer_zip, 
-      customer_phone: req.body.customer_phone, 
-      agent_id: req.body.agent_id, 
-      order_total: req.body.order_total, 
-      notes: req.body.notes,
-      product_id: req.body.product_id,
-      status: req.body.status
+      customer_first_name: req.body.orderObj.customer_first_name, 
+      customer_last_name: req.body.orderObj.customer_last_name, 
+      customer_email: req.body.orderObj.customer_email, 
+      customer_address: req.body.orderObj.customer_address, 
+      customer_city: req.body.orderObj.customer_city, 
+      customer_state: req.body.orderObj.customer_state, 
+      customer_zip: req.body.orderObj.customer_zip, 
+      customer_phone: req.body.orderObj.customer_phone, 
+      agent_id: req.body.orderObj.agent_id, 
+      order_total: req.body.orderObj.order_total, 
+      notes: req.body.orderObj.notes,
+      product_id: req.body.orderObj.product_id,
+      status: req.body.orderObj.status,
+      order_total: req.body.orderObj.order_total,
     } 
-    // const order = req.body.order;
-   const total = req.body.total
+   console.log("order notes", order.notes)
    const order_items = req.body.order_items
     if (!order) {
       res.status(404).json({ message: "Error processing your order"  });
     } else {
       const addedOrder = await Orders.addOrder(order);
-      console.log("addedOrder", addedOrder)
+
       const addedOrderItems =  order_items.map(item => ({
         order_id: addedOrder[0],
         product_id: item.product_id,
@@ -101,73 +101,113 @@ exports.addOrder = async (req, res, next) => {
         price: item.price,
         color_id: item.color_id,
         image_id: item.image_id,
-      }))
-      const newOrder = {order, addedOrderItems}
+      }));
+
+      console.log("added order items", addedOrderItems);
+
       const addItem = await Orders.addToOrderItems(addedOrderItems)
-console.log("can i loop foe email", addedOrderItems.order_id)
-      // const OrdersToInsert = order.map(order => (
+
+      //GET ADDED ITEMS 
+
+      const new_order = await Orders.getOrderById(parseInt(addedOrder));
+console.log("new_order", new_order)
+      const mapItem = new_order.map(item => {
+        console.log("item", item)
+        // let prod = i.slice(1, -1)
+        // console.log("prod", prod)
+
+      return JSON.stringify(item)
+      //  return   title: item.title,
+      //   price: item.price,
+      //   color: item.colors,
+      //   image_url: item.image_url,
+      //   quantity: item.quantity,
       
-      //   {
-        
-      //   product_id: order.product_id,
-      //   status: order.status,
-      //   customer_email: order.customer_email,
-      //   customer_first_name: order.customer_first_name,
-      //   customer_last_name: order.customer_last_name,
-      //   customer_address: order.customer_address,
-      //   customer_city: order.customer_city,
-      //   customer_state: order.customer_state,
-      //   customer_zip: order.customer_city,
-      //   customer_phone: order.customer_phone,
-      //   agent_commision: order.agent_commision,
-      //   agent_id: order.agent_id,
-      //   notes: order.notes
-      // }
-      
-      // ));
-
-
-      
-      //INSERT AGENT COMMISION INTO AGENT PAGE
-   
-
-      // const custOrder = await Orders.getOrdersByCustomer(order.email);
-
-      // console.log("customer order", custOrder)
-    //   const msg = {
-    //     to: "latifahpresident@gmail.com",
-    //     from: 'latifah.pres@gmail.com',
-    //     subject: 'Order conformation',
-    //     text: `We recieved a new order from ${customer_email}, they ordered ${OrdersToInsert[0].product_id}. Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
-    //       The customer can be contacted at ${OrdersToInsert[0].customer_phone},
-    //     `,
-    //     html: `
-    //     <p>
-    //     Order conformation. This is a conformation that your order has been processed.
-    //       You will receive a delivery time with in the next 24 hours. Thanks for being a valued customer. Please see order below. If any part of this order is incorrect please reach out to us at booking@coopershomefurniture.com
-        
-    //     </p>
-    //     {{#each product}}
      
-    //       <p>{{this.title}}</p>
+      })
+      // console.log("MAPPED ITEM", mapItem)
+
+const string = JSON.stringify(new_order)
+// console.log("STRING", string)
+
+      let arritems = {}
+      const orderItem = new_order.forEach(item => {
+        console.log("item",  item.title),
+        // arritems = item.title
        
-      
-    //   {{/each}}
-        
-        
-    //     `
-       
-    //     // html: `<strong> We recieved a new order from ${OrdersToInsert[0].customer_email}, they ordered ${product[0].title}, price: ${product[0].price}, color: ${product[0].colors}. The item number is ${product[0].item_number} .
-    //     // <img src="${product[0].images}" alt="${product[0].title}"/> Items need to be shipped to ${OrdersToInsert[0].customer_address}, ${OrdersToInsert[0].customer_city}, ${OrdersToInsert[0].customer_state}, ${OrdersToInsert[0].customer_zip}. 
-    //     // The customer can be contacted at ${OrdersToInsert[0].customer_phone},</strong>`,
-    //   };
-    //   sgMail.send(msg).then(() => {
-    //     console.log('Message sent', msg)
-    // }).catch((error) => {
-    //     console.log(error.response.body)
-    //     // console.log(error.response.body.errors[0].message)
-    // })
-      res.status(200).json({message: `Order Created`});
+       arritems = { 
+         title: item.title,
+        price: item.price,
+        color: item.colors,
+        image_url: item.image_url,
+        quantity: item.quantity,
+      }
+      return arritems
+      })
+      // console.log("ORDER ITEM", arritems)
+      // console.log("ORDER ITEM func", arritems)
+
+      // const prods = {
+      //    item: new_order
+      // }
+      // console.log("item object prods", prods)
+
+      let prodTitle = {}
+      const sendEmail = () => {
+        let msg = {}
+       new_order.forEach(item=> {
+          console.log(item.title);
+          console.log(item.price);
+          prodTitle = item.title
+
+           
+        });
+           
+  
+      }
+   
+      console.log("prodTitle", prodTitle)
+  
+     const msg = {
+        to: [order.customer_email],
+        bcc: 'admin@coopershomefurniture.com',
+        from: 'admin@coopershomefurniture.com',
+        subject: `Cooper's Home Furniture Order Confirmation`,
+        html:
+        `<head>
+          <title></title>
+        </head>
+        <body>
+          <div data-role="module-unsubscribe" class="module" role="module" data-type="unsubscribe" style="color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Left;" data-muid="4e838cf3-9892-4a6d-94d6-170e474d21e5">
+            <p>This is a conformation that your order has been processed.
+            You will receive a delivery time within the next 24 hours. Thanks for being a valued customer. Please see order below. If any part of this order is incorrect please reach out to us at booking@coopershomefurniture.com</p>
+            <h3 style="margin-top:4rem;">Order #${addedOrder}</h3>
+            <p style="font-size:12px; line-height:20px;"> Name on order:  ${order.customer_first_name} ${order.customer_last_name}</p>
+             <p style="text-transform:capitalize">Address: ${order.customer_address} ${order.customer_city} ${order.customer_state}, ${order.customer_zip}</p>
+            <p>Phone Number: ${order.customer_phone}</p>
+            <p>Order Status: ${order.status}</p>
+            <div>
+              <img src=${new_order[0].image_url} alt=${new_order[0].title}/>
+            </div>
+             <p>${new_order[0].title} </p>
+          <p>Price: $${new_order[0].price}</p>
+     <p>Order Total: ${order.order_total}</p>
+     <p>Order Notes: ${order.notes}</p>
+    
+    
+           
+          </div>
+        </body>`
+     
+      };
+      sgMail.send(msg).then(() => {
+        console.log('Message sent', msg)
+    }).catch((error) => {
+        console.log(error.response.body)
+        console.log(error.response.body.errors[0].message)
+    })
+
+      res.status(200).json(addedOrder);
     }
   } catch (err) {
     res.status(500).json(`Cannot add order: ${err.message}`);

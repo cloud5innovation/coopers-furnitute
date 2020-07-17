@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('products', product => {
       product.increments();
-      product.string('title').notNullable().unique();
+      product.string("title").notNullable().unique();
       product.string('description', 900).notNullable();
       product.float('price').notNullable();
       // product.string('image_url', 250).notNullable();
