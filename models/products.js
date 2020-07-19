@@ -11,12 +11,8 @@ products = () => {
 productById = (id) => {
     console.log("id from model", id)
     return db('products')
-
-    // .innerJoin('colors', 'products.title', 'colors.product_title')
-    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.image_url', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier')
-
+    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier')
     .where({'products.id': id})
-
 };
 
 getByCategory = (cat) => {
@@ -32,13 +28,33 @@ addProduct = (product) => {
     return db('products').insert(product)
 };
 
-addColor =(color) => {
-    return db('colors').insert(color);
+filterBy = (col, filter) => {
+  
+    return db('products')
+    .innerJoin('colors', 'products.title', 'colors.product_title')
+    .innerJoin('images', 'products.title', 'images.product_title')
+    .select(
+        'products.id', 
+        'products.title', 
+        'products.price', 
+        'products.description', 
+        'products.category', 
+        'products.quantity', 
+        'products.item_number', 
+        'products.item_name', 
+        'products.item_price',
+        'products.supplier', 
+        'colors.id as color_id',  
+        'colors.name as colors', 
+        'products.out_of_stock', 
+        'products.back_in_stock', 
+        'images.id as image_id', 
+        'images.image_url as images',
+        )
+
+    .where(`products.${col}`, filter)
 };
 
-addImage =(image) => {
-    return db('images').insert(image);
-};
 editProduct = (id, product) => {
     return db('products').where({ id }).update(product)
 };
@@ -47,37 +63,52 @@ deleteProduct = (id) => {
     return db('products').where({ id }).del()
 };
 
-filterBy = (col, filter) => {
-  
-    return db('products')
-    .innerJoin('colors', 'products.title', 'colors.product_title')
-    .innerJoin('images', 'products.title', 'images.product_title')
-    .select('products.id', 'products.title', 'products.price', 'products.description', 'products.category', 'products.quantity', 'products.item_number', 'products.supplier', 'colors.id as color_id',  'colors.name as colors', 'products.out_of_stock', 'images.id as image_id', 'images.image_url as images')
-
-    .where(`products.${col}`, filter)
+//COLOR MODELS
+getColors = () => {
+    return db('colors');
 };
 
 colorBy = (product_title) => {
     console.log("title from backend", product_title)
     return db('colors')
-    // .innerJoin('colors', 'products.title', 'colors.product_title')
     .where({'colors.product_title': product_title})
+};
+
+addColor =(color) => {
+    return db('colors').insert(color);
+};
+
+editColor = (color_id, color) => {
+    return db('colors').where({ 'colors.id': color_id }).update(color)
+};
+
+deleteColor = (color_id) => {
+    return db('colors').where({ 'colors.id': color_id }).del()
+};
+
+//IMAGE MODELS
+getImages = () => {
+    return db('images');
 };
 
 imageBy = (product_title) => {
     console.log("title from backend", product_title)
     return db('images')
-    // .innerJoin('colors', 'products.title', 'colors.product_title')
     .where({'images.product_title': product_title})
 };
 
-getColors = () => {
-    return db('colors');
+addImage =(image) => {
+    return db('images').insert(image);
 };
 
-getImages = () => {
-    return db('images');
+editImage = (image_id, image) => {
+    return db('images').where({ 'images.id': image_id }).update(image)
 };
+
+deleteImage = (image_id) => {
+    return db('images').where({ 'images.id': image_id }).del()
+};
+
 module.exports = {
     products,
     productById,
@@ -91,5 +122,9 @@ module.exports = {
     addImage,
     imageBy,
     getImages,
-    getByCategory
+    getByCategory,
+    editColor,
+    deleteColor,
+    editImage,
+    deleteImage
 }

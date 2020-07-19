@@ -5,26 +5,6 @@ getCartById = id => {
     .first();
 };
 
-// getCartItems = id => {
-//     return db("cart_item")
-//       .innerJoin("products", "cart.product_id", "products.id")
-//       .innerJoin('cart', 'cart_item.cart_id', 'cart.firebase_id')  
-//       .innerJoin('colors', 'products.title', 'colors.name') 
-//       .innerJoin('images', 'products.title', 'images.image_url')       
-//       .select([
-//         "cart_item.id",
-//         "product_id",
-//         "products.title",
-//         "products.description",
-//         "products.price",
-//         "products.image_url",
-//         "cart.quantity",
-       
-//       ])
-//       .where({cart_id: id })
-//       // .where({ "cart_item.cart_id": `cart_item.${id}`});
-//   };
-
 getCartItems = id => {
   return db('cart_item')
     .innerJoin('products', 'cart_item.product_id', 'products.id')

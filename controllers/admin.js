@@ -86,38 +86,72 @@ exports.addProducts = async (req, res) => {
 };
 
 exports.editProduct = async (req, res, next) => {
-    const {id}  = req.params;
-    console.log(id, "id")
-    const updatedProduct = req.body.updates;
+    const { id }  = req.params;
+    const color_id  = req.body.color_id
+    // const image_id  = req.body.image_id
+    console.log(req.body.colors, "colors")
+    const updatedProduct = {
+        title: req.body.title,
+        price: req.body.price,
+        description: req.body.description,
+        category: req.body.category,
+        quantity: req.body.quantity,
+        item_number: req.body.item_number,
+        supplier: req.body.supplier,
+        out_of_stock: req.body.out_of_stock,
+        back_in_stock: req.body.back_in_stock,
+    };
+
+    console.log("updatedProduct", updatedProduct)
+
+    const updatedColor = {
+        name: req.body.color
+    }
+    console.log("updatedColor", updatedColor)
+
     try {
         const product = await Products.productById(id)
         if(!product) {
             //TODO: BETTER ERROR HANDLING NOT THROWING ERROR HERE
             res.status(404).json({message: "That product was not found"})
         } else {
+            
             const newProduct = await Products.editProduct(id, updatedProduct);
-            res.status(200).json(`Your product was edited`)
+            console.log("newroduct", newProduct)
+
+            const newColor = await Products.editColor(color_id, updatedColor);
+            console.log("newColor", newColor)
+
+            // const newImage = await Products.editImage(Image_id, updatedProduct);
+
+
+            res.status(200).json({message: `Producted updated!`})
         }
     } catch (err) {
-        if(err == "Undefined binding")
+        // if(err == "Undefined binding")
         res.status(500).json(err)
         console.log(err, 'error from edit');
     }
 };
 
 exports.deleteProduct = async (req, res, next) => {
-    const { id } = req.params;
-    console.log("id", id)
-    // products.productById(id)
+    //products?id=12y&color_id=1&image_id=1
+    const { id, color_id, image_id } = req.query;
+    // const color_id  = req.body.color_id
+    // const image_id  = req.body.image_id
+    console.log("color id", color_id)
     try {
-        const productData = await Products.deleteProduct(id)
-        if (productData) {
-            res.status(204).json(`product deleted`)
+       
+        if (id && color_id && image_id) {
+            const productData = await Products.deleteProduct(id)
+            const ColorData = await Products.deleteColor(color_id)
+            const ImageData = await Products.deleteImage(image_id)
+            res.status(204).json({message: `product deleted`})
         } else {
-            res.status(404).json({message: `There was an error, product not deleted`})
+            res.status(404).json({message: `No product was provide to be deleted. Please try again`})
         }
     } catch (err) {
-        res.status(500).json(`That product does not exist, ${err}`)
+        res.status(500).json({message: `There was a problem deleting that product, ${err.message}`})
     }
 };
 
