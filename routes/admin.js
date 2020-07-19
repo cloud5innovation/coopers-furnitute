@@ -54,8 +54,8 @@ router.post('/addadmin', adminRoutes.addAdmin);
 router.post('/addproduct',    adminRoutes.addProducts);
 //PUT => /admin/id => EDIT A PRODUCT
 router.put('/edit/:id',  adminRoutes.editProduct);
-//DELETE => /admin/deleteprod/id => DELETE A PRODUCT
-router.delete('/deleteprod/:id',  adminRoutes.deleteProduct);
+//DELETE =>/admin/deleteprod?id=12y&color_id=1&image_id=1 => DELETE A PRODUCT
+router.delete('/deleteprod/',  adminRoutes.deleteProduct);
 
 //USER ROUTES
 //DELETE => /admin/delete/id => REMOVE A USER
