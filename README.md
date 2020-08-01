@@ -29,11 +29,9 @@ The API publishes the following endpoints to: `https:/coopers-furniture.herokuap
 | ------ | ----------------------- | -------------- | -------------------------------------------- |
 | GET    | `/admin/users` | admin      | Returns the information for all users that have signed up for Cooper's Home Furniture. |
 | DELETE | `/admin/delete/:id` | admin         | Delete an existing user.                      |
-
 | POST    | `/admin/addproduct` | admin      | Returns a 201 status if a new product was added successfully. |
 | PUT    | `/admin/:id` | admin         | Modify an existing product.             |
 | DELETE | `/admin/deleteprod/:id` | admin         | Delete an existing product.                      |
-
 | GET    | `/admin/agents` | admin      | Returns the information for all agents that have signed up for Cooper's Home Furniture. |
 
 #### User Routes
@@ -74,8 +72,6 @@ The API publishes the following endpoints to: `https:/coopers-furniture.herokuap
 | GET  | `/products/category/:cat` | none | Returns a list of products based on the category. |
 
 # Data Model
-
-🚫This is just an example. Replace this with your data model
 
 ## USERS
 ---
