@@ -1,9 +1,8 @@
 const Products = require('../models/products');
 
-//TO HANDLE MULTIPLE USERS IN CART RUN A FOR EACH CARTITEM MAKE A STRIPE API CALL FRO
-//CARTITEM.STRIPID
 exports.getProducts = async (req, res) => {
     try {
+        //STORING PRODUCTS COLORS AND IMAGES AS INDIVIDUAL ARRAYS
         const productData = await Products.products();
         const dbcolors = await Products.getColors();
         const dbImages = await Products.getImages();
