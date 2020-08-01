@@ -6,50 +6,34 @@ const router = express.Router();
 // //POST => /admin/addadmin => REGISTER AN ADMIN
 // router.post('/addadmin', adminRoutes.addAdmin);
 
+//ADMIN PRODUCT ROUTES 
 // //POST => /admin/addproduct => ADD A PRODUCT
 // router.post('/addproduct',   authorize.auth, authorize.checkadmin, adminRoutes.addProducts);
+
 // //PUT => /admin/id => EDIT A PRODUCT
 // router.put('/edit/:id', authorize.auth, authorize.checkadmin, adminRoutes.editProduct);
+
 // //DELETE => /admin/deleteprod/id => DELETE A PRODUCT
 // router.delete('/delete-user/:id', authorize.auth, authorize.checkadmin, adminRoutes.deleteProduct);
-// //DELETE => /admin/agents=> GET A LIST OF AGENTS
-// router.get('/agents', adminRoutes.getAgents)
-
-
 
 // //USER ROUTES
 // //DELETE => /admin/delete/id => REMOVE A USER
-// router.delete('/delete/:id', authorize.auth, authorize.checkadmin, adminRoutes.deleteUser);
+// router.delete('/delete-user/:id', authorize.auth, authorize.checkadmin, adminRoutes.deleteUser);
+
 // //GET => /admin/users => ALL USERS
 // router.get('/users', authorize.auth, authorize.checkadmin, adminRoutes.getUsers);
 
-// router.post('/addadmin', adminRoutes.addAdmin);
 
-// //POST => /admin/addproduct => ADD A PRODUCT
-// router.post('/addproduct',    adminRoutes.addProducts);
-// //PUT => /admin/id => EDIT A PRODUCT
-// router.put('/edit/:id',  adminRoutes.editProduct);
-// //DELETE => /admin/deleteprod/id => DELETE A PRODUCT
-// router.delete('/delete/:id',  adminRoutes.deleteProduct);
+//AGENT ROUTES
+// //GET => /admin/agents=> GET A LIST OF AGENTS
+// router.get('/agents', authorize.auth, authorize.checkadmin, adminRoutes.getAgents)
 
-// //USER ROUTES
-// //DELETE => /admin/delete/id => REMOVE A USER
-// router.delete('/delete-user/:id',  adminRoutes.deleteUser);
-// //GET => /admin/users => ALL USERS
-// router.get('/users',  adminRoutes.getUsers);
 
-// //GET => /admin/agents => GET AGENTS
-// router.get('/agents', adminRoutes.getAgents)
-// module.exports = router;
-
-//USER ROUTES
-//DELETE => /admin/delete/id => REMOVE A USER
-router.delete('/delete/:id', adminRoutes.deleteUser);
-//GET => /admin/users => ALL USERS
-router.get('/users',  adminRoutes.getUsers);
-
+//ROUTES BELLOW THIS LINE HAVE THE AUTHENTICATION REMOVED AND SHOULD BE  COMMENTED OUT BEFORE PUSHING TO MASTER
+// //POST => /admin/addadmin => REGISTER AN ADMIN
 router.post('/addadmin', adminRoutes.addAdmin);
 
+//ADMIN PRODUCT ROUTES 
 //POST => /admin/addproduct => ADD A PRODUCT
 router.post('/addproduct',    adminRoutes.addProducts);
 //PUT => /admin/id => EDIT A PRODUCT
@@ -63,6 +47,8 @@ router.delete('/delete-user/:id',  adminRoutes.deleteUser);
 //GET => /admin/users => ALL USERS
 router.get('/users',  adminRoutes.getUsers);
 
+//AGENT ROUTES
 //GET => /admin/agents => GET AGENTS
 router.get('/agents', adminRoutes.getAgents)
+
 module.exports = router;
