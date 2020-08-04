@@ -73,6 +73,8 @@ The API publishes the following endpoints to: `https:/coopers-furniture.herokuap
 
 # Data Model
 
+Note: unless noted, string types are 255 char limit.
+
 ## USERS
 ---
 
