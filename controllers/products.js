@@ -11,7 +11,7 @@ exports.getProducts = async (req, res) => {
         const productData = await Products.products().paginate({perPage: 12, currentPage: req.query.page || 1 }); //returns an object with properties data and pagination
         const dbcolors = await Products.getColors();
         const dbImages = await Products.getImages();
-        console.log("PRODUCTS", productData.pagination.total)
+        console.log("COUNT",productData.data.length)
         // console.log("db colors", dbcolors)
         const colors = dbcolors.map(item => {
             return item.name
@@ -23,7 +23,7 @@ exports.getProducts = async (req, res) => {
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
-            res.status(200).json({products: productData.data, colors: colors, images: images, count: productData.pagination.total});
+            res.status(200).json({products: productData.data, colors: colors, images: images, count: productData.data.length});
         }
     } catch (err) {
         res.status(500).json(`No products found`);

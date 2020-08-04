@@ -170,8 +170,9 @@ const string = JSON.stringify(new_order)
   
      const msg = {
         to: [order.customer_email],
-        bcc: 'admin@coopershomefurniture.com',
-        from: 'admin@coopershomefurniture.com',
+        // // bcc: 'admin@coopershomefurniture.com',
+        // from: 'admin@coopershomefurniture.com',
+         from: 'latifah.pres@gmail.com',
         subject: `Cooper's Home Furniture Order Confirmation`,
         html:
         `<head>
