@@ -12,7 +12,11 @@ exports.getProducts = async (req, res) => {
         const productData = await Products.products().paginate({perPage: 12, currentPage: page || 1 }); //returns an object with properties data and pagination
         const dbcolors = await Products.getColors();
         const dbImages = await Products.getImages();
+<<<<<<< HEAD
         // console.log("PRODUCTS", productData)
+=======
+        console.log("PRODUCTS", productData.pagination.total)
+>>>>>>> development
         // console.log("db colors", dbcolors)
         const colors = dbcolors.map(item => {
             return item.name
@@ -20,11 +24,19 @@ exports.getProducts = async (req, res) => {
         const images = dbImages.map(item => {
             return item.image_url
         });
+<<<<<<< HEAD
         // console.log("product data", productData.data)
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
             res.status(200).json({products: productData.data, colors: colors, images: images});
+=======
+        console.log("product data", productData.data)
+        if (productData.length == 0) {
+            res.status(404).json({message: `You haven't added any products yet.`})
+        } else {
+            res.status(200).json({products: productData.data, colors: colors, images: images, count: productData.pagination.total});
+>>>>>>> development
         }
     } catch (err) {
         res.status(500).json(`No products found`);
