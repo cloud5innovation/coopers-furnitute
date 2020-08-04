@@ -1,20 +1,26 @@
 const Products = require('../models/products');
+const {attachPaginate} = require('knex-paginate');
+attachPaginate();
 
 exports.getProducts = async (req, res) => {
+     // /?page=1
     try {
+        //GET CURRENT PAGE FROM QUERY PARAM ON URL FROM FROTEND
+        const { page } = req.query
+        console.log("PAGE", page)
         //STORING PRODUCTS COLORS AND IMAGES AS INDIVIDUAL ARRAYS
-        const productData = await Products.products();
+        const productData = await Products.products().paginate({perPage: 12, currentPage: page || 1 });
         const dbcolors = await Products.getColors();
         const dbImages = await Products.getImages();
-
-        console.log("db colors", dbcolors)
+        console.log("PRODUCTS", productData)
+        // console.log("db colors", dbcolors)
         const colors = dbcolors.map(item => {
             return item.name
         });
         const images = dbImages.map(item => {
             return item.image_url
         });
-        console.log("images", images)
+        // console.log("images", images)
         if (productData.length == 0) {
             res.status(404).json({message: `You haven't added any products yet.`})
         } else {
@@ -30,7 +36,6 @@ exports.getProductById = async (req, res) => {
     try {
         const {id} = req.params
         const productData = await Products.productById(id)
-        
         console.log("product by id", productData)
         if(!productData) {
             res.status(404).json({message: `That product cannot be found`})
@@ -60,13 +65,13 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.filterBy = async (req, res) => {
-    //products?col=catergory&filter=rings
+    //products?col=catergory&filter=bunkbeds
     try {
         const {col, filter} = req.query
         console.log("col", col)
         console.log("filter", filter)
 
-        if (!col && !filter) {
+        if (!col && !filter) { //col and filter are required 
             res.status(404).json({message: "Enter a column and filter"})
         } else {
             const product = await Products.filterBy(col, filter)
@@ -77,7 +82,7 @@ exports.filterBy = async (req, res) => {
                 images: image.image_url
             }))
             console.log("product!!", product)
-            res.status(200).json([product, colors, images])
+            res.status(200).json([product, colors, images]) //return all products, colors, and images for the requested data
         }        
     } catch (err) {
         res.status(500).json(err)
@@ -85,25 +90,4 @@ exports.filterBy = async (req, res) => {
     }
 };
 
-exports.getByCat = async (req, res) => {
-    const {cat} = req.params
-        try {
-            const productData = await Products.getByCategory(cat);
-            // const dbcolors = await Products.getColors();
-            // const dbImages = await Products.getImages();
-    
-            // const colors = dbcolors.map(item => {
-            //     return item.name
-            // });
-          
-            if (productData.length == 0) {
-                res.status(404).json({message: `You haven't added any products yet.`})
-            } else {
-                res.status(200).json({products: productData});
-            }
-        } catch (err) {
-            res.status(500).json(`No products found`);
-            console.log(err)
-        }
 
-}

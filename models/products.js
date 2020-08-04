@@ -1,5 +1,6 @@
 const db = require('../dbconfig.js');
 
+
 products = () => {
     return db('products')
     .innerJoin('colors', 'products.title', 'colors.product_title')
